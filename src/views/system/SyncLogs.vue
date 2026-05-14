@@ -8,7 +8,7 @@
     <StatsGrid :stats="statsData" />
     <DataTable :columns="columns" :data="paginatedLogs">
       <template #status="{ item }">
-        <i :class="item.status === 'success' ? 'pi pi-check-circle text-green-400' : 'pi pi-times-circle text-red-400'"
+        <i :class="item.status === 'success' ? 'pi pi-check-circle text-gray-700' : 'pi pi-times-circle text-gray-400'"
           class="text-xl mx-auto block w-fit"></i>
       </template>
       <template #entity_type="{ item }">{{ item.entity_type || 'orders' }}</template>
@@ -17,7 +17,7 @@
       <template #execution_time_seconds="{ item }">{{ item.execution_time_seconds || 0 }} сек</template>
       <template #error_message="{ item }">
         <span v-if="item.error_message" class="cursor-help" :title="item.error_message">
-          <i class="pi pi-exclamation-triangle text-yellow-400"></i>
+          <i class="pi pi-exclamation-triangle text-gray-500"></i>
         </span>
         <span v-else>—</span>
       </template>
@@ -93,11 +93,6 @@ const formatNumber = (n) => new Intl.NumberFormat('ru-RU').format(n || 0);
 const formatDateTime = (d) => d ? new Date(d).toLocaleString('ru-RU') : '—';
 
 onMounted(async () => {
-  try {
-    const res = await systemApi.getSyncLogs({ limit: 1000 });
-    logs.value = res.data;
-  } catch (e) {
-    console.error(e);
-  }
+  try { const res = await systemApi.getSyncLogs({ limit: 1000 }); logs.value = res.data; } catch (e) { console.error(e); }
 });
 </script>

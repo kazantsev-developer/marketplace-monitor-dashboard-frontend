@@ -20,7 +20,7 @@
   @apply hidden;
 }
 .p-dropdown:not(.p-disabled).p-focus {
-  @apply border-gray-800 ring-2 ring-gray-800/20;
+  @apply border-gray-700 ring-2 ring-gray-700/20;
 }
 .p-dropdown-panel {
   @apply rounded-xl border border-gray-200 shadow-lg mt-1 overflow-hidden;
@@ -70,7 +70,7 @@ button {
   @apply border border-gray-300 bg-white rounded-xl h-10 px-3;
 }
 .p-inputtext:focus {
-  @apply border-gray-800 ring-2 ring-gray-800/20;
+  @apply border-gray-700 ring-2 ring-gray-700/20;
 }
 
 .page-title {

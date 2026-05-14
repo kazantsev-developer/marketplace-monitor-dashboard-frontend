@@ -1,6 +1,18 @@
 <template>
-  <div class="orders-chart">
-    <canvas ref="chartCanvas"></canvas>
+  <div>
+    <div class="flex justify-center gap-8 mb-4">
+      <span class="text-sm cursor-pointer transition-colors" :class="{ 'opacity-40 line-through': !wbVisible }"
+        :style="{ color: wbVisible ? '#3b82f6' : '#9ca3af' }" @click="toggleDataset('wb')">
+        Wildberries
+      </span>
+      <span class="text-sm cursor-pointer transition-colors" :class="{ 'opacity-40 line-through': !ozonVisible }"
+        :style="{ color: ozonVisible ? '#ec4899' : '#9ca3af' }" @click="toggleDataset('ozon')">
+        Ozon
+      </span>
+    </div>
+    <div class="orders-chart">
+      <canvas ref="chartCanvas"></canvas>
+    </div>
   </div>
 </template>
 
@@ -13,8 +25,20 @@ Chart.register(...registerables);
 const props = defineProps({ data: { type: Array, required: true } });
 const chartCanvas = ref(null);
 let chartInstance = null;
+const wbVisible = ref(true);
+const ozonVisible = ref(true);
 
 const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+
+const toggleDataset = (dataset) => {
+  if (dataset === 'wb') wbVisible.value = !wbVisible.value;
+  else ozonVisible.value = !ozonVisible.value;
+  if (chartInstance) {
+    chartInstance.data.datasets[0].hidden = !wbVisible.value;
+    chartInstance.data.datasets[1].hidden = !ozonVisible.value;
+    chartInstance.update();
+  }
+};
 
 onMounted(() => {
   if (!props.data.length) return;
@@ -24,17 +48,41 @@ onMounted(() => {
     data: {
       labels: props.data.map(d => formatDate(d.date)),
       datasets: [
-        { label: 'Wildberries', data: props.data.map(d => d.wb_orders), borderColor: '#60a5fa', backgroundColor: 'rgba(96, 165, 250, 0.1)', tension: 0.4, fill: true },
-        { label: 'Ozon', data: props.data.map(d => d.ozon_orders), borderColor: '#f472b6', backgroundColor: 'rgba(244, 114, 182, 0.1)', tension: 0.4, fill: true }
+        {
+          label: 'Wildberries',
+          data: props.data.map(d => d.wb_orders),
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59,130,246,0.05)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#3b82f6',
+          pointBorderColor: '#fff',
+          tension: 0.3,
+          fill: true,
+          hidden: false
+        },
+        {
+          label: 'Ozon',
+          data: props.data.map(d => d.ozon_orders),
+          borderColor: '#ec4899',
+          backgroundColor: 'rgba(236,72,153,0.05)',
+          borderWidth: 2,
+          pointRadius: 3,
+          pointBackgroundColor: '#ec4899',
+          pointBorderColor: '#fff',
+          tension: 0.3,
+          fill: true,
+          hidden: false
+        }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#e5e7eb' } } },
+      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
       scales: {
-        x: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' } },
-        y: { grid: { color: '#374151' }, ticks: { color: '#9ca3af' }, beginAtZero: true }
+        x: { grid: { color: '#f3f4f6' }, ticks: { color: '#6b7280', font: { size: 11 } } },
+        y: { grid: { color: '#f3f4f6' }, ticks: { color: '#6b7280', font: { size: 11 }, stepSize: 1 }, beginAtZero: true }
       }
     }
   });
@@ -53,6 +101,6 @@ watch(() => props.data, (newData) => {
 <style scoped>
 .orders-chart {
   width: 100%;
-  height: 300px;
+  height: 320px;
 }
 </style>

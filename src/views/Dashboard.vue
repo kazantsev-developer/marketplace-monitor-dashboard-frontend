@@ -3,13 +3,13 @@
     <PageHeader title="Дашборд" subtitle="Общая статистика по всем системам" />
 
     <div v-if="loading" class="flex justify-center py-20">
-      <i class="pi pi-spin pi-spinner text-4xl text-primary"></i>
+      <i class="pi pi-spin pi-spinner text-4xl text-gray-500"></i>
     </div>
     <div v-else-if="error" class="bg-red-900/50 text-red-200 p-4 rounded-lg">{{ error }}</div>
     <div v-else>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <Card class="bg-gray-900">
-          <template #title><span class="text-sm text-gray-400">WILDBERRIES</span></template>
+        <Card class="bg-white">
+          <template #title><span class="text-sm text-gray-500">WILDBERRIES</span></template>
           <template #content>
             <div class="space-y-2">
               <StatsCard label="Заказы" :value="formatNumber(stats.wb.orders)" />
@@ -18,8 +18,8 @@
             </div>
           </template>
         </Card>
-        <Card class="bg-gray-900">
-          <template #title><span class="text-sm text-gray-400">OZON</span></template>
+        <Card class="bg-white">
+          <template #title><span class="text-sm text-gray-500">OZON</span></template>
           <template #content>
             <div class="space-y-2">
               <StatsCard label="Заказы" :value="formatNumber(stats.ozon.orders)" />
@@ -27,14 +27,14 @@
             </div>
           </template>
         </Card>
-        <Card class="bg-gray-900">
-          <template #title><span class="text-sm text-gray-400">МОЙСКЛАД</span></template>
+        <Card class="bg-white">
+          <template #title><span class="text-sm text-gray-500">МОЙСКЛАД</span></template>
           <template #content>
             <StatsCard label="Всего остатков" :value="formatNumber(stats.moysklad.total_stock)" />
           </template>
         </Card>
-        <Card class="bg-gray-900">
-          <template #title><span class="text-sm text-gray-400">СИНХРОНИЗАЦИЯ</span></template>
+        <Card class="bg-white">
+          <template #title><span class="text-sm text-gray-500">СИНХРОНИЗАЦИЯ</span></template>
           <template #content>
             <div class="space-y-2">
               <StatsCard label="За 24 часа" :value="formatNumber(stats.sync.last_24h)" />
@@ -44,30 +44,31 @@
         </Card>
       </div>
 
-      <Card class="bg-gray-900 mb-8">
-        <template #title><span class="text-sm text-gray-400">ДИНАМИКА ЗАКАЗОВ</span></template>
+      <Card class="bg-white mb-8">
+        <template #title><span class="text-sm text-gray-500">ДИНАМИКА ЗАКАЗОВ</span></template>
         <template #content>
           <OrdersChart v-if="chartData.length" :data="chartData" />
           <div v-else class="h-64 flex items-center justify-center text-gray-400">Нет данных</div>
         </template>
       </Card>
 
-      <Card class="bg-gray-900">
-        <template #title><span class="text-sm text-gray-400">ПОСЛЕДНИЕ СИНХРОНИЗАЦИИ</span></template>
+      <Card class="bg-white">
+        <template #title><span class="text-sm text-gray-500">ПОСЛЕДНИЕ СИНХРОНИЗАЦИИ</span></template>
         <template #content>
           <div class="flex justify-end mb-3"><Button as="router-link" to="/system/logs" text size="small">Все логи
               →</Button></div>
           <div v-if="logs.length === 0" class="text-center text-gray-400 py-4">Нет данных</div>
           <div v-else class="space-y-2">
-            <div v-for="log in logs" :key="log.id" class="flex justify-between items-center p-2 rounded-lg bg-gray-800">
-              <div class="flex items-center gap-2"><i
-                  :class="log.status === 'success' ? 'pi pi-check-circle text-green-400' : 'pi pi-times-circle text-red-400'"></i>
+            <div v-for="log in logs" :key="log.id" class="flex justify-between items-center p-2 rounded-lg bg-gray-50">
+              <div class="flex items-center gap-2">
+                <i :class="log.status === 'success' ? 'pi pi-check-circle text-gray-700' : 'pi pi-times-circle text-gray-400'"
+                  class="text-lg"></i>
                 <div>
-                  <div class="text-sm font-medium">{{ log.entity_type || 'orders' }}</div>
-                  <div class="text-xs text-gray-400">{{ formatDate(log.sync_at) }}</div>
+                  <div class="text-sm font-medium text-gray-800">{{ log.entity_type || 'orders' }}</div>
+                  <div class="text-xs text-gray-500">{{ formatDate(log.sync_at) }}</div>
                 </div>
               </div>
-              <div class="text-sm text-gray-300">{{ log.records_count }} записей</div>
+              <div class="text-sm text-gray-600">{{ log.records_count }} записей</div>
             </div>
           </div>
         </template>
