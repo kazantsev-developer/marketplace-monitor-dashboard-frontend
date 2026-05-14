@@ -1,38 +1,37 @@
-# wb-monitor-frontend
+Дашборд для мониторинга заказов, остатков и карточек товаров Wildberries, Ozon и МойСклад.
 
-This template should help get you started developing with Vue 3 in Vite.
+## Стек
 
-## Recommended IDE Setup
+- Vue 3 (Composition API)
+- PrimeVue 3
+- Tailwind CSS
+- Chart.js
+- Axios
+- Vue Router 4
+- Vite 7
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Возможности
 
-## Recommended Browser Setup
+- Просмотр заказов WB / Ozon с фильтрацией и пагинацией
+- Остатки на складах WB, Ozon, МойСклад
+- Карточки товаров WB (сетка с фото)
+- Логи синхронизации
+- Дашборд с графиком динамики заказов
+- Кликабельные названия для скрытия/показа линий на графике
+- Чёрно-белая тема с цветными линиями графика (синий – WB, розовый – Ozon)
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Установка
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
 npm install
-```
 
-### Compile and Hot-Reload for Development
+## Запуск
 
-```sh
 npm run dev
-```
 
-### Compile and Minify for Production
+## Сборка
 
-```sh
 npm run build
-```
+
+## API
+
+Фронтенд ожидает бэкенд на http://localhost:3000/api (можно переопределить через VITE_API_URL)
