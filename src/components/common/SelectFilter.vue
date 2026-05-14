@@ -1,52 +1,17 @@
 <template>
-  <select :value="modelValue" @change="$emit('update:modelValue', $event.target.value)" class="filter-select">
-    <slot></slot>
-  </select>
+  <Dropdown :modelValue="modelValue" @update:modelValue="emitValue" :options="options" optionLabel="label"
+    optionValue="value" :placeholder="placeholder" class="select-filter w-full sm:w-64" />
 </template>
 
 <script setup>
+import Dropdown from 'primevue/dropdown';
+
 defineProps({
-  modelValue: { type: [String, Number], default: '' }
-})
-defineEmits(['update:modelValue'])
+  modelValue: { type: [String, Number], default: '' },
+  options: { type: Array, required: true },
+  placeholder: { type: String, default: 'Выберите' }
+});
+
+const emit = defineEmits(['update:modelValue']);
+const emitValue = (val) => emit('update:modelValue', val);
 </script>
-
-<style scoped>
-.filter-select {
-  background: #0f0f0f;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 10px 16px;
-  color: #fff;
-  font-size: 14px;
-  min-width: 150px;
-  text-align: center;
-  text-align-last: center;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  cursor: pointer;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #e052c4;
-}
-
-.filter-select:hover {
-  background: #e052c4;
-  color: #fff;
-  border-color: #e052c4;
-}
-
-.filter-select option {
-  text-align: center;
-  background: #0f0f0f;
-  color: #fff;
-}
-
-.filter-select:hover option {
-  background: #0f0f0f;
-  color: #fff;
-}
-</style>

@@ -1,34 +1,10 @@
 <template>
-  <div class="stats-summary">
-    <StatsCard v-for="(stat, index) in stats" :key="index" :label="stat.label" :value="stat.value" />
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <StatsCard v-for="(stat, idx) in stats" :key="idx" :label="stat.label" :value="stat.value" />
   </div>
 </template>
 
 <script setup>
-import StatsCard from './StatsCard.vue'
-
-defineProps({
-  stats: { type: Array, required: true }
-})
+import StatsCard from './StatsCard.vue';
+defineProps({ stats: Array });
 </script>
-
-<style scoped>
-.stats-summary {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-@media (max-width: 1024px) {
-  .stats-summary {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
-  .stats-summary {
-    grid-template-columns: 1fr;
-  }
-}
-</style>

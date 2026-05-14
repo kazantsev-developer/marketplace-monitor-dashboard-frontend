@@ -1,42 +1,13 @@
 <template>
-  <div class="stat-summary-card">
-    <span class="stat-label">{{ label }}</span>
-    <span class="stat-value">{{ value }}</span>
+  <div class="bg-gray-900 rounded-lg p-4 text-center border border-gray-800">
+    <p class="text-gray-400 text-sm">{{ label }}</p>
+    <p class="text-2xl font-bold text-white mt-1">{{ value }}</p>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  label: { type: String, required: true },
-  value: { type: [String, Number], required: true }
-})
+  label: String,
+  value: [String, Number]
+});
 </script>
-
-<style scoped>
-.stat-summary-card {
-  background: #0f0f0f;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  text-align: center;
-  align-items: center;
-}
-
-.stat-label {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
-  text-align: center;
-  width: 100%;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: #fff;
-  text-align: center;
-  width: 100%;
-}
-</style>
