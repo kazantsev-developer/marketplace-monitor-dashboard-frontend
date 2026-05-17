@@ -2,7 +2,8 @@
 
 ## Стек
 
-- Vue 3 (Composition API)
+- Vue3 (Composition API)
+- TypeScript
 - PrimeVue 3
 - Tailwind CSS
 - Chart.js
