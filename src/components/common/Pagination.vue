@@ -5,21 +5,26 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Paginator from 'primevue/paginator';
 import { computed } from 'vue';
 
-const props = defineProps({
-  currentPage: { type: Number, required: true },
-  totalPages: { type: Number, required: true },
-  pageSize: { type: Number, default: 20 }
-});
+const props = withDefaults(
+  defineProps<{
+    currentPage: number;
+    totalPages: number;
+    pageSize?: number;
+  }>(),
+  { pageSize: 20 },
+);
 
-const emit = defineEmits(['page-change']);
+const emit = defineEmits<{
+  (e: 'page-change', page: number): void;
+}>();
+
 const totalRecords = computed(() => props.totalPages * props.pageSize);
 
-const onPageChange = (event) => {
-  const newPage = event.page + 1;
-  emit('page-change', newPage);
+const onPageChange = (event: { page: number }) => {
+  emit('page-change', event.page + 1);
 };
 </script>

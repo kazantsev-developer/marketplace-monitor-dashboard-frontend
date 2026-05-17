@@ -1,16 +1,23 @@
 <template>
-  <InputText :value="modelValue" @update:modelValue="emitValue" :placeholder="placeholder"
-    class="w-full sm:w-64 h-10" />
+  <InputText :model-value="modelValue" @update:model-value="onInput" :placeholder="placeholder"
+    class="w-full sm:w-64 h-10 px-4 py-2" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import InputText from 'primevue/inputtext';
 
-defineProps({
-  modelValue: { type: String, default: '' },
-  placeholder: { type: String, default: 'Поиск...' }
-});
+defineProps<{
+  modelValue?: string;
+  placeholder?: string;
+}>();
 
-const emit = defineEmits(['update:modelValue']);
-const emitValue = (val) => emit('update:modelValue', val);
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
+
+const onInput = (value: string | undefined) => {
+  if (value !== undefined) {
+    emit('update:modelValue', value);
+  }
+};
 </script>

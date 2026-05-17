@@ -16,23 +16,33 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { Chart, registerables } from 'chart.js';
+import { Chart, registerables, type Chart as ChartType } from 'chart.js';
+import type { DailyChartPoint } from '@/types';
 
 Chart.register(...registerables);
 
-const props = defineProps({ data: { type: Array, required: true } });
-const chartCanvas = ref(null);
-let chartInstance = null;
+const props = defineProps<{
+  data: DailyChartPoint[];
+}>();
+
+const chartCanvas = ref<HTMLCanvasElement | null>(null);
+let chartInstance: ChartType | null = null;
 const wbVisible = ref(true);
 const ozonVisible = ref(true);
 
-const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+const formatDate = (dateStr: string): string => {
+  return new Date(dateStr).toLocaleDateString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+  });
+};
 
-const toggleDataset = (dataset) => {
+const toggleDataset = (dataset: 'wb' | 'ozon'): void => {
   if (dataset === 'wb') wbVisible.value = !wbVisible.value;
   else ozonVisible.value = !ozonVisible.value;
+
   if (chartInstance) {
     chartInstance.data.datasets[0].hidden = !wbVisible.value;
     chartInstance.data.datasets[1].hidden = !ozonVisible.value;
@@ -42,7 +52,11 @@ const toggleDataset = (dataset) => {
 
 onMounted(() => {
   if (!props.data.length) return;
+  if (!chartCanvas.value) return;
+
   const ctx = chartCanvas.value.getContext('2d');
+  if (!ctx) return;
+
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
@@ -50,52 +64,65 @@ onMounted(() => {
       datasets: [
         {
           label: 'Wildberries',
-          data: props.data.map(d => d.wb_orders),
+          data: props.data.map(d => d.wbOrders),
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59,130,246,0.05)',
           borderWidth: 2,
           pointRadius: 3,
           pointBackgroundColor: '#3b82f6',
-          pointBorderColor: '#fff',
+          pointBorderColor: '#ffffff',
           tension: 0.3,
           fill: true,
-          hidden: false
+          hidden: false,
         },
         {
           label: 'Ozon',
-          data: props.data.map(d => d.ozon_orders),
+          data: props.data.map(d => d.ozonOrders),
           borderColor: '#ec4899',
           backgroundColor: 'rgba(236,72,153,0.05)',
           borderWidth: 2,
           pointRadius: 3,
           pointBackgroundColor: '#ec4899',
-          pointBorderColor: '#fff',
+          pointBorderColor: '#ffffff',
           tension: 0.3,
           fill: true,
-          hidden: false
-        }
-      ]
+          hidden: false,
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: { mode: 'index', intersect: false },
+      },
       scales: {
-        x: { grid: { color: '#f3f4f6' }, ticks: { color: '#6b7280', font: { size: 11 } } },
-        y: { grid: { color: '#f3f4f6' }, ticks: { color: '#6b7280', font: { size: 11 }, stepSize: 1 }, beginAtZero: true }
-      }
-    }
+        x: {
+          grid: { color: '#f3f4f6' },
+          ticks: { color: '#6b7280', font: { size: 11 } },
+        },
+        y: {
+          grid: { color: '#f3f4f6' },
+          ticks: { color: '#6b7280', font: { size: 11 }, stepSize: 1 },
+          beginAtZero: true,
+        },
+      },
+    },
   });
 });
 
-watch(() => props.data, (newData) => {
-  if (chartInstance) {
+watch(
+  () => props.data,
+  (newData) => {
+    if (!chartInstance) return;
     chartInstance.data.labels = newData.map(d => formatDate(d.date));
-    chartInstance.data.datasets[0].data = newData.map(d => d.wb_orders);
-    chartInstance.data.datasets[1].data = newData.map(d => d.ozon_orders);
+    chartInstance.data.datasets[0].data = newData.map(d => d.wbOrders);
+    chartInstance.data.datasets[1].data = newData.map(d => d.ozonOrders);
     chartInstance.update();
-  }
-}, { deep: true });
+  },
+  { deep: true },
+);
 </script>
 
 <style scoped>

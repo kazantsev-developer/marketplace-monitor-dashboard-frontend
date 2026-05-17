@@ -1,5 +1,5 @@
 <template>
-  <DataTable :value="data" class="custom-table p-datatable-sm rounded-xl overflow-hidden border border-gray-200">
+  <DataTable :value="data" class="p-datatable-sm" tableStyle="min-width: 50rem">
     <Column v-for="col in columns" :key="col.key" :field="col.key" :header="col.label"
       :class="col.align === 'right' ? 'text-right' : 'text-left'">
       <template #body="{ data }">
@@ -14,13 +14,22 @@
   </DataTable>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 
-defineProps({
-  columns: { type: Array, required: true },
-  data: { type: Array, required: true },
-  emptyText: { type: String, default: 'Нет данных' }
-});
+export interface ColumnDef {
+  key: string;
+  label: string;
+  align?: 'left' | 'center' | 'right';
+}
+
+withDefaults(
+  defineProps<{
+    columns: ColumnDef[];
+    data: Record<string, unknown>[];
+    emptyText?: string;
+  }>(),
+  { emptyText: 'Нет данных' },
+);
 </script>

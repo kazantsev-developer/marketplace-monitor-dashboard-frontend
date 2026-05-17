@@ -1,17 +1,27 @@
 <template>
-  <Dropdown :modelValue="modelValue" @update:modelValue="emitValue" :options="options" optionLabel="label"
-    optionValue="value" :placeholder="placeholder" class="select-filter w-full sm:w-64" />
+  <Dropdown :model-value="modelValue" @update:model-value="onChange" :options="options" option-label="label"
+    option-value="value" :placeholder="placeholder" class="w-full sm:w-64" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Dropdown from 'primevue/dropdown';
 
-defineProps({
-  modelValue: { type: [String, Number], default: '' },
-  options: { type: Array, required: true },
-  placeholder: { type: String, default: 'Выберите' }
-});
+export interface SelectOption {
+  value: string | number;
+  label: string;
+}
 
-const emit = defineEmits(['update:modelValue']);
-const emitValue = (val) => emit('update:modelValue', val);
+defineProps<{
+  modelValue?: string | number;
+  options: SelectOption[];
+  placeholder?: string;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string | number): void;
+}>();
+
+const onChange = (value: string | number) => {
+  emit('update:modelValue', value);
+};
 </script>
