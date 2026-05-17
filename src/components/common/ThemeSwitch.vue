@@ -24,43 +24,37 @@ const applyTheme = (dark: boolean) => {
 
 const toggleTheme = async () => {
   const nextDark = !isDark.value;
-
   if (!document.startViewTransition) {
     isDark.value = nextDark;
     applyTheme(nextDark);
     return;
   }
-
   const transition = document.startViewTransition(() => {
     isDark.value = nextDark;
     applyTheme(nextDark);
   });
-
   await transition.ready;
-
   const rect = wrapperRef.value?.getBoundingClientRect();
-  if (!rect) return;
-
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-
-  const right = window.innerWidth - rect.left;
-  const bottom = window.innerHeight - rect.top;
-  const maxRadius = Math.hypot(Math.max(rect.left, right), Math.max(rect.top, bottom));
-
-  document.documentElement.animate(
-    {
-      clipPath: [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${maxRadius}px at ${x}px ${y}px)`,
-      ],
-    },
-    {
-      duration: 500,
-      easing: 'ease-in-out',
-      pseudoElement: '::view-transition-new(root)',
-    }
-  );
+  if (rect) {
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const right = window.innerWidth - rect.left;
+    const bottom = window.innerHeight - rect.top;
+    const maxRadius = Math.hypot(Math.max(rect.left, right), Math.max(rect.top, bottom));
+    document.documentElement.animate(
+      {
+        clipPath: [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${maxRadius}px at ${x}px ${y}px)`,
+        ],
+      },
+      {
+        duration: 500,
+        easing: 'ease-in-out',
+        pseudoElement: '::view-transition-new(root)',
+      }
+    );
+  }
 };
 
 onMounted(() => {

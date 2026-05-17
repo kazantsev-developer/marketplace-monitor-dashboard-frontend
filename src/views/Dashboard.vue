@@ -12,9 +12,9 @@
           <template #title><span class="text-sm text-gray-400">WILDBERRIES</span></template>
           <template #content>
             <div class="space-y-2">
-              <StatsCard label="Заказы" :value="formatNumber(stats.wb.orders)" />
-              <StatsCard label="Остатки" :value="formatNumber(stats.wb.remains)" />
-              <StatsCard label="Карточки" :value="formatNumber(stats.wb.cards)" />
+              <StatsCard label="Заказы" :value="stats.wb.orders" />
+              <StatsCard label="Остатки" :value="stats.wb.remains" />
+              <StatsCard label="Карточки" :value="stats.wb.cards" />
             </div>
           </template>
         </Card>
@@ -22,22 +22,22 @@
           <template #title><span class="text-sm text-gray-400">OZON</span></template>
           <template #content>
             <div class="space-y-2">
-              <StatsCard label="Заказы" :value="formatNumber(stats.ozon.orders)" />
-              <StatsCard label="Остатки" :value="formatNumber(stats.ozon.remains)" />
+              <StatsCard label="Заказы" :value="stats.ozon.orders" />
+              <StatsCard label="Остатки" :value="stats.ozon.remains" />
             </div>
           </template>
         </Card>
         <Card class="bg-gray-800 border-gray-700">
           <template #title><span class="text-sm text-gray-400">МОЙСКЛАД</span></template>
           <template #content>
-            <StatsCard label="Всего остатков" :value="formatNumber(stats.moysklad.totalStock)" />
+            <StatsCard label="Всего остатков" :value="stats.moysklad.totalStock" />
           </template>
         </Card>
         <Card class="bg-gray-800 border-gray-700">
           <template #title><span class="text-sm text-gray-400">СИНХРОНИЗАЦИЯ</span></template>
           <template #content>
             <div class="space-y-2">
-              <StatsCard label="За 24 часа" :value="formatNumber(stats.sync.last24h)" />
+              <StatsCard label="За 24 часа" :value="stats.sync.last24h" />
               <StatsCard label="Успешность" :value="stats.sync.successRate + '%'" />
             </div>
           </template>
@@ -62,7 +62,7 @@
           <div v-else class="space-y-2">
             <div v-for="log in logs" :key="log.id" class="flex justify-between items-center p-2 rounded-lg bg-gray-700">
               <div class="flex items-center gap-2">
-                <i :class="log.status === 'success' ? 'pi pi-check-circle text-green-400' : 'pi pi-times-circle text-red-400'"
+                <i :class="log.status === 'success' ? 'pi pi-check-circle text-gray-400' : 'pi pi-times-circle text-gray-500'"
                   class="text-lg"></i>
                 <div>
                   <div class="text-sm font-medium text-white">
@@ -101,7 +101,6 @@ const stats = ref<DashboardStats>({
 const logs = ref<SyncLog[]>([]);
 const chartData = ref<DailyChartPoint[]>([]);
 
-const formatNumber = (n: number): string => new Intl.NumberFormat('ru-RU').format(n);
 const formatDate = (dateString: string): string =>
   new Date(dateString).toLocaleString('ru-RU', {
     day: '2-digit',
@@ -110,6 +109,37 @@ const formatDate = (dateString: string): string =>
     minute: '2-digit',
   });
 
+function normalizeStats(raw: unknown): DashboardStats {
+  const data = raw as Record<string, any>;
+  return {
+    wb: {
+      orders: data.wb?.orders ?? 0,
+      remains: data.wb?.remains ?? 0,
+      cards: data.wb?.cards ?? 0,
+    },
+    ozon: {
+      orders: data.ozon?.orders ?? 0,
+      remains: data.ozon?.remains ?? 0,
+    },
+    moysklad: {
+      totalStock: data.moysklad?.totalStock ?? data.moysklad?.total_stock ?? 0,
+    },
+    sync: {
+      last24h: data.sync?.last24h ?? data.sync?.last_24h ?? 0,
+      successRate: data.sync?.successRate ?? data.sync?.success_rate ?? 0,
+    },
+  };
+}
+
+function normalizeChart(raw: unknown): DailyChartPoint[] {
+  const points = raw as any[];
+  return points.map((p) => ({
+    date: p.date,
+    wbOrders: p.wbOrders ?? p.wb_orders ?? 0,
+    ozonOrders: p.ozonOrders ?? p.ozon_orders ?? 0,
+  }));
+}
+
 onMounted(async () => {
   try {
     const [statsRes, logsRes, chartRes] = await Promise.all([
@@ -117,9 +147,10 @@ onMounted(async () => {
       systemApi.getSyncLogs({ limit: 5 }),
       systemApi.getDailyChart(30),
     ]);
-    stats.value = statsRes.data;
+
+    stats.value = normalizeStats(statsRes.data);
     logs.value = logsRes.data;
-    chartData.value = chartRes.data;
+    chartData.value = normalizeChart(chartRes.data);
   } catch (e) {
     console.error(e);
     error.value = 'Не удалось загрузить данные';

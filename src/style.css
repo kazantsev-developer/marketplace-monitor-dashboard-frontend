@@ -171,6 +171,9 @@ button {
 .light .bg-gray-800 {
   background-color: #ffffff;
 }
+.light .bg-gray-700 {
+  background-color: #f9fafb;
+}
 .light .border-gray-800,
 .light .border-gray-700 {
   border-color: #e5e7eb;
@@ -182,7 +185,13 @@ button {
 .light .text-gray-400 {
   color: #6b7280;
 }
-.light .bg-gray-800.text-white.font-medium {
-  background-color: #e5e7eb;
-  color: #111827;
+.light .p-button-text {
+  color: #3b82f6;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+}
+.light .p-button-text:hover {
+  color: #2563eb;
+  background-color: transparent;
 }

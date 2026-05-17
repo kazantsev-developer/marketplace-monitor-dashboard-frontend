@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
@@ -8,14 +7,15 @@ export default {
       },
       colors: {
         primary: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          200: "#bfdbfe",
-          300: "#93c5fd",
-          400: "#60a5fa",
-          500: "#3b82f6",
-          600: "#2563eb",
-          700: "#1d4ed8",
+          DEFAULT: "#e052c4",
+          50: "#fdf2fb",
+          100: "#fae6f6",
+          200: "#f5cdee",
+          300: "#f0b4e5",
+          400: "#e67cd4",
+          500: "#e052c4",
+          600: "#c43aa8",
+          700: "#a42e8a",
         },
       },
     },
