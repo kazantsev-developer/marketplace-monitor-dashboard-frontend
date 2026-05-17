@@ -73,7 +73,7 @@ const navSections: NavSection[] = [
   },
   {
     title: 'МойСклад',
-    links: [{ label: 'Остатки', to: '/moysklad/stocks', icon: 'pi pi-building' }],
+    links: [{ label: 'Остатки', to: '/moysklad/stocks', icon: 'pi pi-box' }],
   },
   {
     title: 'Система',
