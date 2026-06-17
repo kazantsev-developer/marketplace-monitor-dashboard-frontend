@@ -1,8 +1,10 @@
-Дашборд для мониторинга заказов, остатков и карточек товаров Wildberries, Ozon и МойСклад.
+# Marketplace Monitor Dashboard
 
-## Стек
+Monitoring dashboard for orders, stock, and product cards from Ozon, Wildberries, and MoySklad.
 
-- Vue3 (Composition API)
+## Stack
+
+- Vue 3 (Composition API)
 - TypeScript
 - PrimeVue 3
 - Tailwind CSS
@@ -11,28 +13,29 @@
 - Vue Router 4
 - Vite 7
 
-## Возможности
+## Features
 
-- Просмотр заказов WB / Ozon с фильтрацией и пагинацией
-- Остатки на складах WB, Ozon, МойСклад
-- Карточки товаров WB (сетка с фото)
-- Логи синхронизации
-- Дашборд с графиком динамики заказов
-- Кликабельные названия для скрытия/показа линий на графике
-- Чёрно-белая тема с цветными линиями графика (синий – WB, розовый – Ozon)
+- Ozon orders (FBO/FBS) with filtering and pagination
+- Wildberries orders with filtering and pagination
+- Stock levels for Ozon, Wildberries, and MoySklad
+- Wildberries product cards (grid with photos)
+- Sync job logs
+- Dashboard with daily orders chart
+- Clickable legend to toggle chart lines
+- Dark theme with colored lines (blue – WB, pink – Ozon)
 
-## Установка
+## Setup
 
 npm install
 
-## Запуск
+## Development
 
 npm run dev
 
-## Сборка
+## Build
 
 npm run build
 
 ## API
 
-Фронтенд ожидает бэкенд на http://localhost:3000/api (можно переопределить через VITE_API_URL)
+The frontend expects the backend at http://localhost:3000/api (override with VITE_API_URL).
