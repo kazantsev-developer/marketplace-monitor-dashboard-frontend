@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container mx-auto" data-testid="dashboard-page">
     <PageHeader title="Дашборд" subtitle="Общая статистика по всем системам" />
 
     <div v-if="loading" class="flex justify-center py-20">
@@ -81,81 +81,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { systemApi } from '@/shared/api/client';
-import type { DashboardStats, DailyChartPoint, SyncLog } from '@/types';
-import PageHeader from '@/components/common/PageHeader.vue';
-import StatsCard from '@/components/common/StatsCard.vue';
-import OrdersChart from '@/components/common/OrdersChart.vue';
-import Card from 'primevue/card';
-import Button from 'primevue/button';
+import { onMounted } from 'vue'
+import { useDashboard } from '@/features/dashboard/composables/useDashboard'
+import { PageHeader } from '@/shared/ui/page-header'
+import { StatsCard } from '@/shared/ui/stats-card'
+import { OrdersChart } from '@/shared/ui/orders-chart'
+import Card from 'primevue/card'
+import Button from 'primevue/button'
+import { formatDate } from '@/shared/lib/formatters'
 
-const loading = ref(true);
-const error = ref<string | null>(null);
-const stats = ref<DashboardStats>({
-  wb: { orders: 0, remains: 0, cards: 0 },
-  ozon: { orders: 0, remains: 0 },
-  moysklad: { totalStock: 0 },
-  sync: { last24h: 0, successRate: 0 },
-});
-const logs = ref<SyncLog[]>([]);
-const chartData = ref<DailyChartPoint[]>([]);
+const { loading, error, stats, logs, chartData, fetchData } = useDashboard()
 
-const formatDate = (dateString: string): string =>
-  new Date(dateString).toLocaleString('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-function normalizeStats(raw: unknown): DashboardStats {
-  const data = raw as Record<string, any>;
-  return {
-    wb: {
-      orders: data.wb?.orders ?? 0,
-      remains: data.wb?.remains ?? 0,
-      cards: data.wb?.cards ?? 0,
-    },
-    ozon: {
-      orders: data.ozon?.orders ?? 0,
-      remains: data.ozon?.remains ?? 0,
-    },
-    moysklad: {
-      totalStock: data.moysklad?.totalStock ?? data.moysklad?.total_stock ?? 0,
-    },
-    sync: {
-      last24h: data.sync?.last24h ?? data.sync?.last_24h ?? 0,
-      successRate: data.sync?.successRate ?? data.sync?.success_rate ?? 0,
-    },
-  };
-}
-
-function normalizeChart(raw: unknown): DailyChartPoint[] {
-  const points = raw as any[];
-  return points.map((p) => ({
-    date: p.date,
-    wbOrders: p.wbOrders ?? p.wb_orders ?? 0,
-    ozonOrders: p.ozonOrders ?? p.ozon_orders ?? 0,
-  }));
-}
-
-onMounted(async () => {
-  try {
-    const [statsRes, logsRes, chartRes] = await Promise.all([
-      systemApi.getDashboardStats(),
-      systemApi.getSyncLogs({ limit: 5 }),
-      systemApi.getDailyChart(30),
-    ]);
-
-    stats.value = normalizeStats(statsRes.data);
-    logs.value = logsRes.data;
-    chartData.value = normalizeChart(chartRes.data);
-  } catch (e) {
-    console.error(e);
-    error.value = 'Не удалось загрузить данные';
-  } finally {
-    loading.value = false;
-  }
-});
+onMounted(fetchData)
 </script>

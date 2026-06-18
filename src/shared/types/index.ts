@@ -115,6 +115,12 @@ export interface MoyskladStore {
   name: string;
 }
 
+/** MoySklad aggregated stock totals */
+export interface MoyskladAggregate {
+  storeUuid: string;
+  totalStock: number;
+}
+
 /** Sync job execution log */
 export interface SyncLog {
   id: number;
@@ -149,8 +155,9 @@ export interface DashboardStats {
   };
 }
 
-/** Daily orders data point for chart */
+/** Aggregated daily order counts for WB and Ozon from the chart endpoint */
 export interface DailyChartPoint {
   date: string;
-  count: number;
+  wbOrders: number;
+  ozonOrders: number;
 }
