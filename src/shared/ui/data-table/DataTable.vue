@@ -16,7 +16,7 @@
   </DataTable>
 </template>
 
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T">
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import type { ColumnDef } from './types'

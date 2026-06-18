@@ -1,12 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-import DashboardView from "../views/Dashboard.vue";
-import OzonOrders from "../views/ozon/OzonOrders.vue";
-import OzonRemains from "../views/ozon/OzonRemains.vue";
-import WbOrders from "../views/wb/WbOrders.vue";
-import WbRemains from "../views/wb/WbRemains.vue";
-import WbCards from "../views/wb/WbCards.vue";
-import MoyskladStocks from "../views/moysklad/MoyskladStocks.vue";
-import SyncLogs from "../views/system/SyncLogs.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,42 +6,42 @@ const router = createRouter({
     {
       path: "/",
       name: "dashboard",
-      component: DashboardView,
+      component: () => import("@/pages/dashboard/DashboardPage.vue"),
     },
     {
       path: "/ozon/orders",
       name: "ozon-orders",
-      component: OzonOrders,
+      component: () => import("@/pages/ozon-orders/OzonOrdersPage.vue"),
     },
     {
       path: "/ozon/remains",
       name: "ozon-remains",
-      component: OzonRemains,
+      component: () => import("@/pages/ozon-remains/OzonRemainsPage.vue"),
     },
     {
       path: "/wb/orders",
       name: "wb-orders",
-      component: WbOrders,
+      component: () => import("@/pages/wb-orders/WbOrdersPage.vue"),
     },
     {
       path: "/wb/remains",
       name: "wb-remains",
-      component: WbRemains,
+      component: () => import("@/pages/wb-remains/WbRemainsPage.vue"),
     },
     {
       path: "/wb/cards",
       name: "wb-cards",
-      component: WbCards,
+      component: () => import("@/pages/wb-cards/WbCardsPage.vue"),
     },
     {
       path: "/moysklad/stocks",
       name: "moysklad-stocks",
-      component: MoyskladStocks,
+      component: () => import("@/pages/moysklad-stocks/MoyskladStocksPage.vue"),
     },
     {
       path: "/system/logs",
       name: "system-logs",
-      component: SyncLogs,
+      component: () => import("@/pages/sync-logs/SyncLogsPage.vue"),
     },
   ],
 });

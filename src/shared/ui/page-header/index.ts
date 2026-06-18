@@ -1,1 +1,1 @@
-export { default as UpageUheader } from "./page-header.vue";
+export { default as PageHeader } from "./PageHeader.vue";

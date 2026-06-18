@@ -4,7 +4,7 @@
   </AppLayout>
 </template>
 
-<script setup>
-import AppLayout from './components/layout/AppLayout.vue';
-import { RouterView } from 'vue-router';
+<script setup lang="ts">
+import AppLayout from '@/widgets/AppLayout/AppLayout.vue'
+import { RouterView } from 'vue-router'
 </script>

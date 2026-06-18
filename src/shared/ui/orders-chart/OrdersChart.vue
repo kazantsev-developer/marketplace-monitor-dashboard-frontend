@@ -27,8 +27,7 @@ import type { DailyChartPoint } from '@/shared/types'
 Chart.register(...registerables)
 
 const props = defineProps<{
-  wbData: DailyChartPoint[]
-  ozonData: DailyChartPoint[]
+  data: DailyChartPoint[]
 }>()
 
 const chartCanvas = ref<HTMLCanvasElement | null>(null)
@@ -42,6 +41,7 @@ const formatDate = (dateStr: string): string =>
 const toggleDataset = (dataset: 'wb' | 'ozon'): void => {
   if (dataset === 'wb') wbVisible.value = !wbVisible.value
   else ozonVisible.value = !ozonVisible.value
+
   if (chartInstance) {
     chartInstance.data.datasets[0].hidden = !wbVisible.value
     chartInstance.data.datasets[1].hidden = !ozonVisible.value
@@ -49,39 +49,19 @@ const toggleDataset = (dataset: 'wb' | 'ozon'): void => {
   }
 }
 
-const buildChart = (): void => {
-  if (!chartCanvas.value) return
+onMounted(() => {
+  if (!props.data.length || !chartCanvas.value) return
   const ctx = chartCanvas.value.getContext('2d')
   if (!ctx) return
-
-  const allDates = [...new Set([
-    ...props.wbData.map(d => d.date),
-    ...props.ozonData.map(d => d.date)
-  ])].sort()
-
-  const wbMap = new Map(props.wbData.map(d => [d.date, d.count]))
-  const ozonMap = new Map(props.ozonData.map(d => [d.date, d.count]))
-
-  const labels = allDates.map(formatDate)
-  const wbValues = allDates.map(d => wbMap.get(d) ?? 0)
-  const ozonValues = allDates.map(d => ozonMap.get(d) ?? 0)
-
-  if (chartInstance) {
-    chartInstance.data.labels = labels
-    chartInstance.data.datasets[0].data = wbValues
-    chartInstance.data.datasets[1].data = ozonValues
-    chartInstance.update()
-    return
-  }
 
   chartInstance = new Chart(ctx, {
     type: 'line',
     data: {
-      labels,
+      labels: props.data.map((d) => formatDate(d.date)),
       datasets: [
         {
           label: 'Wildberries',
-          data: wbValues,
+          data: props.data.map((d) => d.wbOrders),
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59,130,246,0.05)',
           borderWidth: 2,
@@ -94,7 +74,7 @@ const buildChart = (): void => {
         },
         {
           label: 'Ozon',
-          data: ozonValues,
+          data: props.data.map((d) => d.ozonOrders),
           borderColor: '#ec4899',
           backgroundColor: 'rgba(236,72,153,0.05)',
           borderWidth: 2,
@@ -127,10 +107,19 @@ const buildChart = (): void => {
       },
     },
   })
-}
+})
 
-onMounted(buildChart)
-watch(() => [props.wbData, props.ozonData], buildChart, { deep: true })
+watch(
+  () => props.data,
+  (newData) => {
+    if (!chartInstance) return
+    chartInstance.data.labels = newData.map((d) => formatDate(d.date))
+    chartInstance.data.datasets[0].data = newData.map((d) => d.wbOrders)
+    chartInstance.data.datasets[1].data = newData.map((d) => d.ozonOrders)
+    chartInstance.update()
+  },
+  { deep: true }
+)
 </script>
 
 <style scoped>
