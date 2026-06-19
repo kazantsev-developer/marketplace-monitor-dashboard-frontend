@@ -28,7 +28,7 @@ Administrative dashboard client for the Marketplace Monitor Platform ecosystem. 
 - **Unified Telemetry Monitor** — Single consolidated real-time stock matrix layout aggregating structural metrics from Ozon, Wildberries, and MoySklad.
 - **Dynamic Catalog Grid** — High-density Wildberries product catalog viewer utilizing fully responsive media renderers.
 - **System Health Auditing** — Real-time execution logs tracking synchronization cron tasks state, item counts, and duration metadata.
-- **Analytical Intelligence** — Interactive daily graphs utilizing clickable multi-series chart legends to toggle isolated data rendering streams.
+- **Analytical Intelligence** — Interactive daily graphs utilizing clickable multi-series chart legends to toggle independent data rendering streams.
 - **Enterprise Dark Interface** — Native dark theme ecosystem mapping with custom brand accents (Blue for Wildberries, Pink for Ozon).
 
 ## Local Development Lifecycle
